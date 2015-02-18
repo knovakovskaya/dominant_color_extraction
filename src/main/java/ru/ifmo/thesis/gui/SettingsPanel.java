@@ -27,10 +27,7 @@ public class SettingsPanel extends JPanel {
     public final int maskEnabled = 3;
     public int currentEnabled; //mask for fields
 
-    SettingsPanel(Dimension d){
-        setMinimumSize(d);
-        setSize(d);
-        setMaximumSize(d);
+    SettingsPanel(){
         cs = new CommonSettings(10, 0.001, 0.05, CommonSettings.StartPointsAlgo.RANDOM);
         algoList = new String[1];
         algoList[0] = "KMeans";
@@ -102,19 +99,19 @@ public class SettingsPanel extends JPanel {
         border.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(final DocumentEvent e) {
-                currentEnabled = currentEnabled|2;
+                currentEnabled = maskBorder(border.getText(), currentEnabled);
                 calculate.setEnabled((currentEnabled == maskEnabled)&&haveImage);
             }
 
             @Override
             public void removeUpdate(final DocumentEvent e) {
-                currentEnabled = currentEnabled&(Integer.MAX_VALUE-2);
+                currentEnabled = maskBorder(border.getText(), currentEnabled);
                 calculate.setEnabled((currentEnabled == maskEnabled)&&haveImage);
             }
 
             @Override
             public void changedUpdate(final DocumentEvent e){
-                currentEnabled = currentEnabled|2;
+                currentEnabled = maskBorder(border.getText(), currentEnabled);
                 calculate.setEnabled((currentEnabled == maskEnabled)&&haveImage);
             }
         });

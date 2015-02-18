@@ -34,7 +34,7 @@ public class Application extends JFrame {
         //setJMenuBar(createMenu());
         setContentPane(createContentPane());
         setVisible(true);
-        setResizable(false);
+        revalidate();
     }
 
 
@@ -94,17 +94,17 @@ public class Application extends JFrame {
 
     private JPanel createContentPane(){
         final JPanel contentPane = new JPanel();
-        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+        contentPane.setLayout(new GridBagLayout());
 
-        settingsPane = new SettingsPanel(new Dimension(getWidth(), 200));
+        settingsPane = new SettingsPanel();
         settingsPane.calculate.addActionListener(calculateActionListener);
         settingsPane.loadfile.addActionListener(openImageActionListener);
         settingsPane.algoBox.addActionListener(changeAlgoActionListener);
 
         JPanel imagesPane = new JPanel();
         imagesPane.setLayout(new BoxLayout(imagesPane, BoxLayout.X_AXIS));
-        originalImgPane = new ImagePanel(null, 10, false, new Dimension(getWidth()/2, 0));
-        clustorizedImgPane = new ImagePanel(null, 10, false, new Dimension(getWidth()/2, 0));
+        originalImgPane = new ImagePanel(null, 10);
+        clustorizedImgPane = new ImagePanel(null, 10);
         originalImgPane.setBorder(BorderFactory.createLineBorder(Color.black));
         originalImgPane.enableMaximizeOnClick();
         clustorizedImgPane.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -112,13 +112,24 @@ public class Application extends JFrame {
         imagesPane.add(originalImgPane);
         imagesPane.add(clustorizedImgPane);
 
-        colorDistributionPane = new ColorDistributionPanel(new Dimension(getWidth(), 200));
+        colorDistributionPane = new ColorDistributionPanel();
 
-        setSize(new Dimension(getWidth(),500));
-        contentPane.add(settingsPane);
-        contentPane.add(imagesPane);
-        contentPane.add(colorDistributionPane);
+        contentPane.add(settingsPane, getYPercentGBC(15,0));
+        contentPane.add(imagesPane, getYPercentGBC(60,1));
+        contentPane.add(colorDistributionPane, getYPercentGBC(25,2));
         return contentPane;
+    }
+
+    private GridBagConstraints getYPercentGBC(int yperc, int posy){
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = posy;
+        gbc.gridwidth = gbc.gridheight = 1;
+        gbc.weightx = 1;
+        gbc.weighty = yperc;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        return gbc;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -135,18 +146,20 @@ public class Application extends JFrame {
             }
             settingsPane.setHaveImage(true);
             updateAlgo();
-            originalImgPane.setImage(algo.getOriginalImage(), 10, false);
+            originalImgPane.setImage(algo.getOriginalImage());
             clearStand();
-            revalidate();
+            updateChildren();
         }
     };
 
     public ActionListener calculateActionListener = new ActionListener(  ) {
         public void actionPerformed(ActionEvent event) {
+            clearStand();
             updateAlgo();
             ArrayList<Map.Entry<Color, Integer>> colors = new ArrayList<>(algo.calculateAndGetColors());
-            clustorizedImgPane.setImage(algo.getClustorizedImage(), 10, false);
+            clustorizedImgPane.setImage(algo.getClustorizedImage());
             colorDistributionPane.colorize(algo.getSettings(), colors);
+            updateChildren();
         }
     };
 
@@ -154,6 +167,7 @@ public class Application extends JFrame {
         public void actionPerformed(ActionEvent event) {
             updateAlgo();
             clearStand();
+            updateChildren();
         }
     };
 
@@ -167,11 +181,14 @@ public class Application extends JFrame {
 
     private void clearStand(){
         if (originalImgPane.getImg() != null){
-            clustorizedImgPane.setImage(null, 10, false);
-            clustorizedImgPane.setAllSizes(originalImgPane.getPreferredSize().width,
-                    originalImgPane.getPreferredSize().height);
+            clustorizedImgPane.setImage(null);
             colorDistributionPane.removeAll();
         }
+    }
+
+    private void updateChildren(){
+        revalidate();
+        repaint();
     }
 
      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
