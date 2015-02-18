@@ -3,7 +3,11 @@ package ru.ifmo.thesis.gui;
 import ru.ifmo.thesis.algo.CommonSettings;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
@@ -17,13 +21,15 @@ class ColorDistributionPanel extends JPanel {
     public ArrayList<Map.Entry<Color,Integer>> colors_list;
     private int pixel_num;
 
+    private MathSettingsPanel mathPane;
+
     public ColorDistributionPanel(){
         colors_list = null;
         pixel_num = 0;
 
         setLayout(new BorderLayout());
         cdp = new JPanel();
-        cdp.setLayout(new BoxLayout(cdp, BoxLayout.X_AXIS));
+        cdp.setLayout(new GridLayout(0, 10));
 
         JPanel bottomPanel = new JPanel(){
             @Override
@@ -34,32 +40,57 @@ class ColorDistributionPanel extends JPanel {
                 return size;
             }
         };
-        bottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        JLabel label = new JLabel("Percentage");
+        bottomPanel.setLayout(new BorderLayout());
+
+        JPanel rightBottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         perc = new JCheckBox();
-        perc.setEnabled(false);
+        perc.setSelected(true);
         perc.addItemListener(new ItemListener() {
 
             public void itemStateChanged(ItemEvent e) {
                 colorize(colors_list, pixel_num);
             }
         });
-        bottomPanel.add(label);
-        bottomPanel.add(perc);
+        rightBottomPanel.add(new JLabel("Percentage"));
+        rightBottomPanel.add(perc);
+        mathPane = new MathSettingsPanel();
+        mathPane.calculateDistribution.addActionListener(calculateColorDistributionActionListener);
+
+        bottomPanel.add(mathPane, BorderLayout.WEST);
+        bottomPanel.add(rightBottomPanel, BorderLayout.EAST);
 
         add(cdp);
         add(bottomPanel, BorderLayout.SOUTH);
         setVisible(true);
     }
 
+
     public void clearAll(){
         cdp.removeAll();
         colors_list = null;
+        mathPane.setHaveColorDistribution(false);
+    }
+
+    private void setColorBoxes(int colorsNum){
+        final int MAX_IN_LINE = 10;
+        cdp.removeAll();
+        if (colorsNum <= MAX_IN_LINE){
+            cdp.setLayout(new GridLayout(0, colorsNum));
+        } else {
+            int rows = (colorsNum-1)/MAX_IN_LINE+1;
+            for (int i = 0; i < MAX_IN_LINE+1; ++i){
+                if (((colorsNum+rows-1)/(i+1) == rows) &&
+                        (colorsNum-rows*(i+1)+1 < 2)){
+                    cdp.setLayout(new GridLayout(0, i+1));
+                    return;
+                }
+            }
+        }
     }
 
     public void colorize(ArrayList<Map.Entry<Color, Integer>> colors, int pixelNum){
         if (colors != null){
-            cdp.removeAll();
+            setColorBoxes(colors.size());
             colors_list = colors;
             pixel_num = pixelNum;
             Collections.sort(colors, new Comparator<Map.Entry<Color,Integer>>() {
@@ -72,6 +103,7 @@ class ColorDistributionPanel extends JPanel {
                 ColorPanel rectangle = new ColorPanel(color.getKey(), (double)color.getValue()*100/pixel_num, perc.isSelected());
                 cdp.add(rectangle);
             }
+            mathPane.setHaveColorDistribution(true);
             revalidate();
             repaint();
         }
@@ -86,6 +118,20 @@ class ColorDistributionPanel extends JPanel {
             this.color = color;
             this.percentage = p;
             this.printPercentage = pp;
+            setBorder(BorderFactory.createLineBorder(Color.black));
+        }
+
+        public Color getTextColor(){
+            if (color.getBlue()+color.getGreen()+color.getRed() < 255)
+                return Color.white;
+            return Color.black;
+        }
+
+        public Dimension getTextPosition(){
+            int dx = (percentage < 10) ? 3: 7;
+            if (getWidth()/2 < 20+dx)
+                return new Dimension(dx, getHeight()+2);
+            return new Dimension(getWidth()/2-20-dx, getHeight()/2+2);
         }
 
         @Override
@@ -99,11 +145,24 @@ class ColorDistributionPanel extends JPanel {
                 String ps = String.valueOf(round) +  "%";
                 if (round == 0)
                     ps = "<0.01%";
-                g.setColor(Color.black);
-                g.drawString(ps, getWidth()/2 - 20, getHeight()/2);
+                if (getWidth() > 60){
+                    g.setColor(getTextColor());
+                    g.setFont(new Font("default", Font.BOLD, 16));
+                    g.drawString(ps, getTextPosition().width, getTextPosition().height);
+                }
             }
         }
     }
 
+    public ActionListener calculateColorDistributionActionListener = new ActionListener(  ) {
+        public void actionPerformed(ActionEvent event) {
+            final JDialog dialog = new GraphDialog(
+                                          mathPane.getBConst(),
+                                          mathPane.getLambda(),
+                                          colors_list.size(),
+                                          colors_list);
+            dialog.setVisible(true);
+        }
+    };
 
 }

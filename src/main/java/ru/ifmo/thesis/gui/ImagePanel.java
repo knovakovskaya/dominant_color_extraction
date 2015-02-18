@@ -46,10 +46,10 @@ public class ImagePanel extends JPanel{
             if (img != null) {
                 final JDialog dialog = new JDialog();
                 int x = (img.getWidth()>800)? 800: img.getWidth();
-                int y = (img.getHeight()>600)? 600: img.getHeight();
-                ImagePanel contentPane = new ImagePanel(img, new Dimension(x,y));
+                int y = (img.getHeight()>800)? 800: img.getHeight();
+                JScrollPane contentPane = new JScrollPane(new ScrollableImage(new ImageIcon(img),100));
                 dialog.setContentPane(contentPane);
-                dialog.setSize(new Dimension(x,y));
+                dialog.setSize(new Dimension(x+20,y+35));
                 dialog.setLocation(20,40);
                 dialog.setVisible(true);
             }

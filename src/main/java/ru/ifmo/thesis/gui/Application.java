@@ -113,6 +113,7 @@ public class Application extends JFrame {
         imagesPane.add(clustorizedImgPane);
 
         colorDistributionPane = new ColorDistributionPanel();
+        colorDistributionPane.clearAll();
 
         contentPane.add(settingsPane, getYPercentGBC(15,0));
         contentPane.add(imagesPane, getYPercentGBC(60,1));
@@ -147,7 +148,6 @@ public class Application extends JFrame {
             settingsPane.setHaveImage(true);
             updateAlgo();
             originalImgPane.setImage(algo.getOriginalImage());
-            colorDistributionPane.perc.setEnabled(true);
             clearStand();
             updateChildren();
         }
