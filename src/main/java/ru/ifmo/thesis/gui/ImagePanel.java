@@ -10,25 +10,33 @@ import java.awt.image.BufferedImage;
 public class ImagePanel extends JPanel{
     private BufferedImage img;
     public boolean doNotResize;
+    private int defaultImageBorder;
+
     private int imgHeight;
     private int imgWidth;
-    private int imgBorder;
-    public Dimension pms;
+    private int imgXBorder;
+    private int imgYBorder;
 
-    public ImagePanel(BufferedImage bi, int border, boolean dnr, Dimension paneMinimumSize){
-        pms = paneMinimumSize;
-        setImage(bi, border, dnr);
-    }
 
-    public void setImage(BufferedImage bi, int border, boolean dnr){
+    public ImagePanel(BufferedImage bi, int defaultBorder){
         img = bi;
-        imgBorder = border;
-        doNotResize = dnr;
-        onResize();
+        defaultImageBorder = defaultBorder;
+        doNotResize =  false;
     }
 
-    public void setImgBorder(int border){
-        imgBorder = border;
+    public ImagePanel(BufferedImage bi, Dimension paneSize){
+        setSize(paneSize);
+        img = bi;
+        defaultImageBorder = 0;
+        doNotResize = true;
+    }
+
+    public void setImage(BufferedImage bi){
+        img = bi;
+    }
+
+    public BufferedImage getImg(){
+        return img;
     }
 
     public void enableMaximizeOnClick(){
@@ -37,60 +45,72 @@ public class ImagePanel extends JPanel{
             public void mouseClicked(MouseEvent arg0){
             if (img != null) {
                 final JDialog dialog = new JDialog();
-                dialog.setContentPane(new ImagePanel(img, 0, true, new Dimension(img.getWidth(), img.getHeight())));
-                dialog.setMaximumSize(new Dimension(img.getWidth(), img.getHeight()));
-                dialog.setMinimumSize(new Dimension(img.getWidth(), img.getHeight()));
+                int x = (img.getWidth()>800)? 800: img.getWidth();
+                int y = (img.getHeight()>600)? 600: img.getHeight();
+                ImagePanel contentPane = new ImagePanel(img, new Dimension(x,y));
+                dialog.setContentPane(contentPane);
+                dialog.setSize(new Dimension(x,y));
+                dialog.setLocation(20,40);
                 dialog.setVisible(true);
             }
             }
         });
     }
 
-    public void setDoNotResize(boolean dnr){
-        doNotResize = dnr;
-        onResize();
-    }
-
-    public void onResize(){
+    public void calcImgSize(){
         if (img == null){
             imgWidth = imgHeight = 0;
-            setMinimumSize(new Dimension(pms.width, pms.height));
-            setMaximumSize(new Dimension(pms.width, pms.height));
         } else {
             if (doNotResize) {
                 imgHeight = img.getHeight();
                 imgWidth = img.getWidth();
-                setPreferredSize(new Dimension(imgWidth, imgHeight));
             } else {
-                if (img.getWidth() > getWidth() - 2*imgBorder){
-                    imgHeight = (int)(img.getHeight()*(pms.width-2*imgBorder)/img.getWidth());
-                    imgWidth = pms.width-2*imgBorder;
-                    setPreferredSize(new Dimension(imgWidth+2*imgBorder, imgHeight+2*imgBorder));
-                }else{
-                    imgHeight = img.getHeight();
+                if ((img.getWidth() < getWidth() - defaultImageBorder*2) && //2small pic. do not resize
+                        (img.getHeight() < getHeight() - defaultImageBorder*2)){
+                    imgXBorder = (getWidth() - img.getWidth())/2;
+                    imgYBorder = (getHeight() - img.getHeight())/2;
                     imgWidth = img.getWidth();
-                    setPreferredSize(new Dimension(pms.width, imgHeight + 2 * imgBorder));
+                    imgHeight = img.getHeight();
+                }else{
+                    if ((double)img.getWidth()/getWidth() > (double)img.getHeight()/getHeight()){
+                        //choose side to base on
+                        if ((double)img.getWidth()/img.getHeight() > (double)getWidth()/getHeight()){
+                            imgXBorder = 0;
+                            imgWidth = getWidth();
+                        }else{
+                            imgXBorder = defaultImageBorder;
+                            imgWidth = getWidth() - 2*imgXBorder;
+                        }
+                        imgHeight = (int)(((double)getWidth()/img.getWidth())*img.getHeight());
+                        imgYBorder = (getHeight() - imgHeight)/2;
+                    }else{
+                        if ((double)img.getHeight()/img.getWidth() > (double)getHeight()/getWidth()){
+                            imgYBorder = 0;
+                            imgHeight = getHeight();
+                        }else{
+                            imgYBorder = defaultImageBorder;
+                            imgHeight = getHeight() - imgYBorder*2;
+                        }
+                        imgWidth = (int)(((double)getHeight()/img.getHeight())*img.getWidth());
+                        imgXBorder = (getWidth() - imgWidth)/2;
+                    }
                 }
             }
-            setMinimumSize(new Dimension(getPreferredSize().width, getPreferredSize().height));
-            setMaximumSize(new Dimension(getPreferredSize().width, getPreferredSize().height));
         }
-        revalidate();
     }
-
 
     @Override
     protected void paintComponent(Graphics g) {
         if (img != null) {
             BufferedImage printerImage = null;
             super.paintComponent(g);
+            calcImgSize();
             if (doNotResize) {
                 printerImage = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
                 g.drawImage(img, 0, 0, imgWidth, imgHeight, null);
             } else {
                 printerImage = new BufferedImage(imgHeight, imgWidth, BufferedImage.TYPE_INT_RGB);
-                int realBorder = (img.getWidth() > getWidth() - 2*imgBorder) ? imgBorder: (getWidth()-img.getWidth())/2;
-                g.drawImage(img, realBorder, imgBorder, imgWidth, imgHeight, null);
+                g.drawImage(img, imgXBorder, imgYBorder, imgWidth, imgHeight, null);
             }
         }
     }
