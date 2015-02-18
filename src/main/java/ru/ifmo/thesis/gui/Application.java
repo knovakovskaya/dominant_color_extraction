@@ -147,6 +147,7 @@ public class Application extends JFrame {
             settingsPane.setHaveImage(true);
             updateAlgo();
             originalImgPane.setImage(algo.getOriginalImage());
+            colorDistributionPane.perc.setEnabled(true);
             clearStand();
             updateChildren();
         }
@@ -158,7 +159,7 @@ public class Application extends JFrame {
             updateAlgo();
             ArrayList<Map.Entry<Color, Integer>> colors = new ArrayList<>(algo.calculateAndGetColors());
             clustorizedImgPane.setImage(algo.getClustorizedImage());
-            colorDistributionPane.colorize(algo.getSettings(), colors);
+            colorDistributionPane.colorize(colors, algo.getClustorizedImage().getWidth()*algo.getClustorizedImage().getHeight());
             updateChildren();
         }
     };
@@ -182,7 +183,7 @@ public class Application extends JFrame {
     private void clearStand(){
         if (originalImgPane.getImg() != null){
             clustorizedImgPane.setImage(null);
-            colorDistributionPane.removeAll();
+            colorDistributionPane.clearAll();
         }
     }
 
