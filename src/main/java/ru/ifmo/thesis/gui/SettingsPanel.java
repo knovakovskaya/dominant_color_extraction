@@ -24,14 +24,14 @@ public class SettingsPanel extends JPanel {
     public CommonSettings cs;
     public String[] algoList;
     public boolean haveImage;
-    public final int maskEnabled = 3;
+    public final int maskEnabled = 1;
     public int currentEnabled; //mask for fields
 
     SettingsPanel(){
         cs = new CommonSettings(10, 0.001, 0.05, CommonSettings.StartPointsAlgo.RANDOM);
         algoList = new String[1];
         algoList[0] = "KMeans";
-        currentEnabled = 3;
+        currentEnabled = 1;
         haveImage = false;
         createContentPane();
     }
@@ -93,35 +93,35 @@ public class SettingsPanel extends JPanel {
             }
         });
 
-        JLabel borderLabel  = new JLabel("border: ");
-        border = new JTextField(String.valueOf(cs.border));
-        border.setColumns(5);
-        border.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(final DocumentEvent e) {
-                currentEnabled = maskBorder(border.getText(), currentEnabled);
-                calculate.setEnabled((currentEnabled == maskEnabled)&&haveImage);
-            }
-
-            @Override
-            public void removeUpdate(final DocumentEvent e) {
-                currentEnabled = maskBorder(border.getText(), currentEnabled);
-                calculate.setEnabled((currentEnabled == maskEnabled)&&haveImage);
-            }
-
-            @Override
-            public void changedUpdate(final DocumentEvent e){
-                currentEnabled = maskBorder(border.getText(), currentEnabled);
-                calculate.setEnabled((currentEnabled == maskEnabled)&&haveImage);
-            }
-        });
+//        JLabel borderLabel  = new JLabel("border: ");
+//        border = new JTextField(String.valueOf(cs.border));
+//        border.setColumns(5);
+//        border.getDocument().addDocumentListener(new DocumentListener() {
+//            @Override
+//            public void insertUpdate(final DocumentEvent e) {
+//                currentEnabled = maskBorder(border.getText(), currentEnabled);
+//                calculate.setEnabled((currentEnabled == maskEnabled)&&haveImage);
+//            }
+//
+//            @Override
+//            public void removeUpdate(final DocumentEvent e) {
+//                currentEnabled = maskBorder(border.getText(), currentEnabled);
+//                calculate.setEnabled((currentEnabled == maskEnabled)&&haveImage);
+//            }
+//
+//            @Override
+//            public void changedUpdate(final DocumentEvent e){
+//                currentEnabled = maskBorder(border.getText(), currentEnabled);
+//                calculate.setEnabled((currentEnabled == maskEnabled)&&haveImage);
+//            }
+//        });
         add(loadfile);
         add(algoBox);
         add(startPointsBox);
         add(cnumLabel);
         add(clusterNum);
-        add(borderLabel);
-        add(border);
+        //add(borderLabel);
+        //add(border);
         add(calculate);
     }
 
