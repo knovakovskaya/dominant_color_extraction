@@ -136,6 +136,7 @@ public class Application extends JFrame {
             settingsPane.setHaveImage(true);
             updateAlgo();
             originalImgPane.setImage(algo.getOriginalImage(), 10, false);
+            clearStand();
             revalidate();
         }
     };
@@ -152,6 +153,7 @@ public class Application extends JFrame {
     public ActionListener changeAlgoActionListener = new ActionListener(  ) {
         public void actionPerformed(ActionEvent event) {
             updateAlgo();
+            clearStand();
         }
     };
 
@@ -161,9 +163,16 @@ public class Application extends JFrame {
                 algo = new KMeans(filename, settingsPane.cs, KMeans.KMeansMode.CONTINUOUS);
                 break;
         }
-
     }
 
+    private void clearStand(){
+        if (originalImgPane.getImg() != null){
+            clustorizedImgPane.setImage(null, 10, false);
+            clustorizedImgPane.setAllSizes(originalImgPane.getPreferredSize().width,
+                    originalImgPane.getPreferredSize().height);
+            colorDistributionPane.removeAll();
+        }
+    }
 
      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Entrace

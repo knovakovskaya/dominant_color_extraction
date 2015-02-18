@@ -27,6 +27,10 @@ public class ImagePanel extends JPanel{
         onResize();
     }
 
+    public BufferedImage getImg(){
+        return img;
+    }
+
     public void setImgBorder(int border){
         imgBorder = border;
     }
@@ -54,8 +58,7 @@ public class ImagePanel extends JPanel{
     public void onResize(){
         if (img == null){
             imgWidth = imgHeight = 0;
-            setMinimumSize(new Dimension(pms.width, pms.height));
-            setMaximumSize(new Dimension(pms.width, pms.height));
+            setAllSizes(pms.width, pms.height);
         } else {
             if (doNotResize) {
                 imgHeight = img.getHeight();
@@ -72,10 +75,14 @@ public class ImagePanel extends JPanel{
                     setPreferredSize(new Dimension(pms.width, imgHeight + 2 * imgBorder));
                 }
             }
-            setMinimumSize(new Dimension(getPreferredSize().width, getPreferredSize().height));
-            setMaximumSize(new Dimension(getPreferredSize().width, getPreferredSize().height));
+            setAllSizes(getPreferredSize().width, getPreferredSize().height);
         }
         revalidate();
+    }
+
+    public void setAllSizes(int w, int h){
+        setMinimumSize(new Dimension(w, h));
+        setMaximumSize(new Dimension(w, h));
     }
 
 
