@@ -4,7 +4,7 @@
 
   <groupId>ru.ifmo.thesis</groupId>
   <artifactId>dominant_color_extraction</artifactId>
-  <version>0.2</version>
+  <version>1.0</version>
   <packaging>jar</packaging>
 
   <name>dominant_color_extraction</name>
