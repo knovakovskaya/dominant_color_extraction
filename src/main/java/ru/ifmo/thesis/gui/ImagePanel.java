@@ -67,10 +67,10 @@ public class ImagePanel extends JPanel{
             } else {
                 if ((img.getWidth() < getWidth() - defaultImageBorder*2) && //2small pic. do not resize
                         (img.getHeight() < getHeight() - defaultImageBorder*2)){
-                    imgXBorder = getWidth() - img.getWidth()/2;
-                    imgYBorder = getHeight() - img.getHeight()/2;
-                    imgWidth = getWidth();
-                    imgHeight = getHeight();
+                    imgXBorder = (getWidth() - img.getWidth())/2;
+                    imgYBorder = (getHeight() - img.getHeight())/2;
+                    imgWidth = img.getWidth();
+                    imgHeight = img.getHeight();
                 }else{
                     if ((double)img.getWidth()/getWidth() > (double)img.getHeight()/getHeight()){
                         //choose side to base on
