@@ -146,7 +146,7 @@ public class DrawMain extends JFrame {
                 int clusterNumber = Integer.parseInt(clusterCount.getText());
                 histPane.removeAll();
                 colors.clear();
-                colors = new ArrayList<>(KMeans.calculateAndGetColors(filename, clusterNumber, KMeans.KMeansMode.CONTINUOUS, -1.0));
+                colors = new ArrayList<>(KMeans.testFoo(filename, clusterNumber, KMeans.KMeansMode.CONTINUOUS));
                 final int width = WINDOW_WIDTH / clusterNumber - 1;
                 final int height = histPane.getHeight();
                 for (final Map.Entry<Color, Integer> color : colors) {

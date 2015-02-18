@@ -68,10 +68,10 @@ public abstract class PicUtil {
         return colors;
     }
 
+    /*
+     * sorts colors with number of pixels, that have this color
+     */
     public static Collection<Entry<Integer, Integer>> getSortedColors(HashMap<Integer, Integer> colors) {
-        /*
-         * sorts colors with number of pixels, that have this color
-         */
         ArrayList<Entry<Integer, Integer>> colorList = new ArrayList<>(colors.entrySet());
         Collections.sort(colorList, new Comparator<Entry<Integer, Integer>>() {
             @Override
@@ -81,11 +81,10 @@ public abstract class PicUtil {
         });
         return colorList;
     }
-    
+    /*
+    * colors ordered with distance to 0;0;0
+    */
     public static Collection<Entry<Integer, Integer>> getOrderedColors(Collection<Entry<Integer, Integer>> colors) {
-        /*
-         * colors ordered with distance to 0;0;0
-         */
         ArrayList<Entry<Integer, Integer>> colorList = new ArrayList<>(colors);
         Collections.sort(colorList, new Comparator<Entry<Integer, Integer>>() {
             @Override
