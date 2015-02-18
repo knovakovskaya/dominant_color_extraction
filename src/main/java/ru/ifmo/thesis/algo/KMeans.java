@@ -20,8 +20,7 @@ public class KMeans {
     }
 
     public static void main(String[] args) {
-
-        args = new String[]{"/Users/abogutskiy/Dropbox/Public/hui.jpg", "/Users/abogutskiy/clusters.png", "5", "-c"};
+        args = new String[] {"/Users/knovakovskaya/Documents/thesis/pics/sample1.jpg", "/Users/knovakovskaya/clusterized.png", "5", "-c"};
 
         if (args.length != 4) {
             System.out.println("Usage: java popscan.KMeans"
