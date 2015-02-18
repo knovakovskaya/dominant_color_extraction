@@ -26,14 +26,14 @@ public class KMeans {
         int k = Integer.parseInt(args[2]);
         String m = args[3];
         KMeansMode mode = KMeansMode.CONTINUOUS;
-        if (m.equals("-i")) {
+        //if (m.equals("-i")) {
             mode = KMeansMode.ITERATIVE;
-        } else if (m.equals("-c")) {
-            mode = KMeansMode.CONTINUOUS;
-        }
+        //} else if (m.equals("-c")) {
+        //    mode = KMeansMode.CONTINUOUS;
+        //}
 
         // create new KMeans object
-        KMeans kmeans = new KMeans(mode, 0.05);
+        KMeans kmeans = new KMeans(mode, 0.001);
         // call the function to actually start the clustering
         BufferedImage dstImage = kmeans.calculate(PicUtil.loadImage(src), MAX_CLUSTERS_NUM);
         // save the resulting image
@@ -52,7 +52,7 @@ public class KMeans {
 
     private final static HashMap<Integer, Integer> colors = new HashMap<>();
     private static final double GLOBAL_PART = 0.05;
-    private static final int MAX_CLUSTERS_NUM = 25;
+    private static final int MAX_CLUSTERS_NUM = 20;
     private static final int TOP_COLORS = 500;
     private static final int TOO_MANY_COLORS = 5000;
     private KMeansMode mode;
@@ -99,12 +99,16 @@ public class KMeans {
         int id = 0;
         for (Map.Entry<Integer,Integer> entry: colors){
             clusters[id] = new Cluster(id, entry.getKey());
-            clusters[id++].pixelCount = entry.getValue();
+            clusters[id].pixelCount = entry.getValue();
+            clusters[id].reds *= entry.getValue();
+            clusters[id].greens *= entry.getValue();
+            clusters[id].blues *= entry.getValue();
+            id++;
         }
         return clusters;
     }
 
-    private int getMainClusters(ArrayList<Entry<Integer, Integer>> sortedColors, int k){
+    private int getMainClustersNum(ArrayList<Entry<Integer, Integer>> sortedColors, int k){
         /* returns number of global(>sum/GLOBAL_PART pixels) colors, but less than k*/
         int sum = 0, counter = 0;
         for (Entry<Integer,Integer> entry: sortedColors)
@@ -135,7 +139,7 @@ public class KMeans {
             int size = image.getHeight() * image.getWidth();
             LinkedList<Integer> toRemove = new LinkedList<>();
             for (Entry<Integer,Integer> entry: colors.entrySet()){
-                if ( (border > 0) && (colors.size() > k) && (((double)entry.getValue())/size < border) )
+                if ( (border > 0) && (colors.size()-toRemove.size() > k) && (((double)entry.getValue())/size < border) )
                     toRemove.push(entry.getKey());
             }
             for (Integer key: toRemove)
@@ -146,7 +150,7 @@ public class KMeans {
                 return randomKClustersFromCollection(new ArrayList<Entry<Integer, Integer>>(colors.entrySet()), k);
             }else {
                 ArrayList<Entry<Integer, Integer>> sortedColors = new ArrayList<>(PicUtil.getSortedColors(colors));
-                int mainClustersNum = getMainClusters(sortedColors, k);
+                int mainClustersNum = getMainClustersNum(sortedColors, k);
                 ArrayList<Entry<Integer,Integer>> topColors = new ArrayList<>(sortedColors.subList(0, mainClustersNum));
                 if (mainClustersNum < k)
                     topColors.addAll(

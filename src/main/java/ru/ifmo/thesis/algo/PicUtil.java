@@ -26,7 +26,7 @@ public abstract class PicUtil {
     }
 
     public static int toRGB(int r, int g, int b){
-        return (r << 16) + (g << 8) + b;
+        return r | g | b;
     }
 
     public static void saveImage(String filename, BufferedImage image) {
