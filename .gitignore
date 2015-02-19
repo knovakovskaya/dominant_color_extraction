@@ -1,6 +1,7 @@
 .DS_Store
 .idea*
+dominant_color_extraction.iml
 .*
 pics/*
 target/*
-
+out/*
