@@ -63,6 +63,34 @@ public abstract class AClusteringAlgorithms implements IClusteringAlgorithms {
         return PicUtil.castToColorArray(PicUtil.getSortedColors(colors));
     }
 
-    public abstract BufferedImage calculate();
+    public BufferedImage calculate(){
+        long start = System.currentTimeMillis();
+        calculateClusters();
+        long end = System.currentTimeMillis();
+        System.out.println("  Clustered to " + clusters.length + " clusters\n"
+                         + "  in " + (end - start) + " ms.");
+        return clustorized;
+    }
+
+    /* always calculates the clusters and clusterized image*/
+    public abstract BufferedImage calculateClusters();
+
+    protected void createClusterizedImage(int pixelToCluster[]){
+        // create result image
+        int w = origin.getWidth(), h = origin.getHeight();
+        clustorized = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                int clusterId = pixelToCluster[w * y + x];
+                clustorized.setRGB(x, y, clusters[clusterId].getRGB());
+                int currentColor = clusters[clusterId].getRGB();
+                if (colors.containsKey(currentColor)) {
+                    colors.put(currentColor, colors.get(currentColor) + 1);
+                } else {
+                    colors.put(currentColor, 1);
+                }
+            }
+        }
+    }
 
 }

@@ -19,14 +19,14 @@ public class KMeans extends AClusteringAlgorithms{
     }
 
     @Override
-    public BufferedImage calculate() {
+    public BufferedImage calculateClusters() {
         long start = System.currentTimeMillis();
-        int w = origin.getWidth();
-        int h = origin.getHeight();
         clusters = ClusterUtil.getStartClusters(origin, cSettings);
         long endfirst = System.currentTimeMillis();
         System.out.println("Prepared start clusters in " + (endfirst - start) + " ms.");
+
         // create cluster lookup table
+        int h = origin.getHeight(), w = origin.getWidth();
         int[] lut = new int[w * h];
         Arrays.fill(lut, -1);
 
@@ -64,39 +64,12 @@ public class KMeans extends AClusteringAlgorithms{
                     }
                 }
             }
+        }
+        createClusterizedImage(lut);
 
-        }
-        // create result image
-        clustorized = new BufferedImage(w, h,
-                BufferedImage.TYPE_INT_RGB);
-        for (int y = 0; y < h; y++) {
-            for (int x = 0; x < w; x++) {
-                int clusterId = lut[w * y + x];
-                clustorized.setRGB(x, y, clusters[clusterId].getRGB());
-                int currentColor = clusters[clusterId].getRGB();
-                if (colors.containsKey(currentColor)) {
-                    colors.put(currentColor, colors.get(currentColor) + 1);
-                } else {
-                    colors.put(currentColor, 1);
-                }
-            }
-        }
-        long end = System.currentTimeMillis();
         System.out.println("KMeans algorithm:\n"
-                + "Clustered to " + clusters.length
-                + " clusters in " + loops
-                + " loops in " + (end - start) + " ms.");
+                         + "  in " + loops + " loops");
         return clustorized;
     }
-
-    public static Collection<Map.Entry<Color, Integer>> testFoo(String filename, int cnum, KMeansMode mode){
-        //calculate
-        CommonSettings cs = new CommonSettings(cnum, 0.001, 0.05, CommonSettings.StartPointsAlgo.SMART_TOP_RANDOM);
-        KMeans kmeans = new KMeans(filename, cs, mode);
-        BufferedImage dstImage = kmeans.calculate();
-        return PicUtil.castToColorArray(PicUtil.getSortedColors(kmeans.colors));
-    }
-
-
 
 }

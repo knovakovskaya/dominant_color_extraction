@@ -26,7 +26,14 @@ public abstract class PicUtil {
     }
 
     public static int toRGB(int r, int g, int b){
-        return r | g | b;
+        return (r>>16) | (g>>8) | b;
+    }
+
+    public static int Distance(int rgb1, int rgb2){
+        int rx = Math.abs(PicUtil.getRed(rgb1) - PicUtil.getRed(rgb2));
+        int gx = Math.abs(PicUtil.getGreen(rgb1) - PicUtil.getGreen(rgb2));
+        int bx = Math.abs(PicUtil.getBlue(rgb1) - PicUtil.getBlue(rgb2));
+        return (rx + gx + bx) / 3;
     }
 
     public static void saveImage(String filename, BufferedImage image) {

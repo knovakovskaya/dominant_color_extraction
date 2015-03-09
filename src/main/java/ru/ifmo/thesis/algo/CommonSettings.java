@@ -5,7 +5,8 @@ public class CommonSettings{
         DIAG,  //points from images diagonal
         RANDOM, //random color from picture(random from color collection)
         SMART_TOP_RANDOM, //cut unpopular colors, sort by dist and get from diag
-        TOP_COLORS, //top colors
+        PLUS_PLUS, //plus_plus algo
+        SMART_RANKS_COLORS, //rank system to check distance
     }
 
     public int clustersNum;
