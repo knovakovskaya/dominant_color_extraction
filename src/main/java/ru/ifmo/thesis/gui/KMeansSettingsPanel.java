@@ -1,7 +1,6 @@
 package ru.ifmo.thesis.gui;
 
 import ru.ifmo.thesis.algo.CommonSettings;
-import ru.ifmo.thesis.algo.KMeans;
 
 import javax.swing.JComboBox;
 import java.awt.*;
@@ -12,23 +11,25 @@ public class KMeansSettingsPanel extends SettingsPanel{
 
     public JComboBox<String> startPointsBox;
 
-    public KMeansSettingsPanel(){
-        super();
-    }
-
     public KMeansSettingsPanel(CommonSettings pcs){
-        super(pcs);
+        this(pcs, false);
     }
 
 
     public KMeansSettingsPanel(CommonSettings pcs, boolean pHaveImage){
         super(pcs,pHaveImage);
+        if (pcs.startPoint == CommonSettings.StartPointsAlgo.DIAG)
+            startPointsBox.setSelectedIndex(0);
+        if (pcs.startPoint == CommonSettings.StartPointsAlgo.RANDOM)
+            startPointsBox.setSelectedIndex(1);
+        if (pcs.startPoint == CommonSettings.StartPointsAlgo.PLUS_PLUS)
+            startPointsBox.setSelectedIndex(2);
     }
 
     @Override
     public void createContentPane(){
         createBasicElements();
-        String[] startPointsList = {"Diagonal", "Random", "Smart(top colors)"};
+        String[] startPointsList = {"Diagonal", "Random", "PlusPlus"};
 
         startPointsBox = new JComboBox<>(startPointsList);
         startPointsBox.addActionListener(new ActionListener() {
@@ -43,14 +44,12 @@ public class KMeansSettingsPanel extends SettingsPanel{
                     case "Random":
                         cs.startPoint = CommonSettings.StartPointsAlgo.RANDOM;
                         break;
-                    case "Smart(top colors)":
-                        cs.startPoint = CommonSettings.StartPointsAlgo.SMART_TOP_RANDOM;
+                    case "PlusPlus":
+                        cs.startPoint = CommonSettings.StartPointsAlgo.PLUS_PLUS;
                         break;
                 }
-
             }
         });
-        startPointsBox.setSelectedIndex(1);
         setLayout(new GridBagLayout());
         add(loadfile);
         add(algoBox);

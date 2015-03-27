@@ -32,7 +32,7 @@ public class Main {
         }
 
         //calculate
-        CommonSettings cs = new CommonSettings(k, 0.001, 0.05, CommonSettings.StartPointsAlgo.SMART_TOP_RANDOM);
+        CommonSettings cs = new CommonSettings(k, 0.001, 0.05, CommonSettings.StartPointsAlgo.PLUS_PLUS);
         KMeans kmeans = new KMeans(src, cs, mode);
         BufferedImage dstImage = kmeans.calculate();
         PicUtil.saveImage(dst, dstImage);

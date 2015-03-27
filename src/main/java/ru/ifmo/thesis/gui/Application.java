@@ -98,7 +98,7 @@ public class Application extends JFrame {
         final JPanel contentPane = new JPanel();
         contentPane.setLayout(new GridBagLayout());
 
-        settingsPane = new KMeansSettingsPanel();
+        settingsPane = new KMeansSettingsPanel(new CommonSettings(10, 0.001, 20, CommonSettings.StartPointsAlgo.PLUS_PLUS));
         settingsPane.calculate.addActionListener(calculateActionListener);
         settingsPane.loadfile.addActionListener(openImageActionListener);
         settingsPane.algoBox.addActionListener(changeAlgoActionListener);

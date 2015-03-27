@@ -3,11 +3,7 @@ package ru.ifmo.thesis.algo;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.*;
 import java.util.Map.Entry;
 import javax.imageio.ImageIO;
 
@@ -29,11 +25,11 @@ public abstract class PicUtil {
         return (r>>16) | (g>>8) | b;
     }
 
-    public static int Distance(int rgb1, int rgb2){
-        int rx = Math.abs(PicUtil.getRed(rgb1) - PicUtil.getRed(rgb2));
-        int gx = Math.abs(PicUtil.getGreen(rgb1) - PicUtil.getGreen(rgb2));
-        int bx = Math.abs(PicUtil.getBlue(rgb1) - PicUtil.getBlue(rgb2));
-        return (rx + gx + bx) / 3;
+    public static long getDistance2(int rgb1, int rgb2){
+        double rx = Math.pow(PicUtil.getRed(rgb1) - PicUtil.getRed(rgb2),2);
+        double gx = Math.pow(PicUtil.getGreen(rgb1) - PicUtil.getGreen(rgb2),2);
+        double bx = Math.pow(PicUtil.getBlue(rgb1) - PicUtil.getBlue(rgb2),2);
+        return (long)(rx+gx+bx);
     }
 
     public static void saveImage(String filename, BufferedImage image) {
@@ -88,6 +84,8 @@ public abstract class PicUtil {
         });
         return colorList;
     }
+
+
     /*
     * colors ordered with distance to 0;0;0
     */

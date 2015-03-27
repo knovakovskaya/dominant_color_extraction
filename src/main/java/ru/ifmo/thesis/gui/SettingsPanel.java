@@ -32,11 +32,7 @@ public class SettingsPanel extends JPanel {
 
     public SettingsPanel(CommonSettings pcs, boolean pHaveImage){
         currentEnabled = 1;
-        if (pcs != null){
-            cs = new CommonSettings(pcs);
-        }else{
-            cs = new CommonSettings(10, 0.001, 0.05, CommonSettings.StartPointsAlgo.RANDOM);
-        }
+        cs = new CommonSettings(pcs);
         createContentPane();
         setHaveImage(pHaveImage);
     }
