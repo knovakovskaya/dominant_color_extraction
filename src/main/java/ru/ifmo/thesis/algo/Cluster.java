@@ -62,7 +62,7 @@ class Cluster {
         pixelCount--;
     }
 
-    int distance(int rgb) {
+    int distance2p(int rgb) {
         if (pixelCount != 0) {
             int rx = reds / pixelCount - PicUtil.getRed(rgb);
             int gx = greens / pixelCount - PicUtil.getGreen(rgb);
@@ -71,4 +71,24 @@ class Cluster {
         }
         return Integer.MAX_VALUE;
     }
+
+    int distance2p(Cluster c){
+        return distance2p(c.getRGB());
+    }
+
+    int distance(int rgb) {
+        if (pixelCount != 0) {
+            int rx = Math.abs(reds / pixelCount - PicUtil.getRed(rgb));
+            int gx = Math.abs(greens / pixelCount - PicUtil.getGreen(rgb));
+            int bx = Math.abs(blues / pixelCount - PicUtil.getBlue(rgb));
+            return rx + gx + bx;
+        }
+        return Integer.MAX_VALUE;
+    }
+
+    int distance(Cluster c){
+        return distance(c.getRGB());
+    }
+
+
 }

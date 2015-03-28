@@ -27,8 +27,20 @@ public class KMeansSettingsPanel extends SettingsPanel{
     }
 
     @Override
-    public void createContentPane(){
-        createBasicElements();
+    protected void fillTopPane(){
+        topPane.setLayout(new GridBagLayout());
+        topPane.add(loadfile);
+        topPane.add(algoBox);
+        topPane.add(startPointsBox);
+        topPane.add(cnumLabel);
+        topPane.add(clusterNum);
+        topPane.add(enableMergeCheckbox);
+        topPane.add(calculate);
+    }
+
+    @Override
+    public void createBasicElements(){
+        super.createBasicElements();
         String[] startPointsList = {"Diagonal", "Random", "PlusPlus"};
 
         startPointsBox = new JComboBox<>(startPointsList);
@@ -50,13 +62,6 @@ public class KMeansSettingsPanel extends SettingsPanel{
                 }
             }
         });
-        setLayout(new GridBagLayout());
-        add(loadfile);
-        add(algoBox);
-        add(startPointsBox);
-        add(cnumLabel);
-        add(clusterNum);
-        add(calculate);
     }
 
 }

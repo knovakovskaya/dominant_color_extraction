@@ -7,9 +7,18 @@ public class CommonSettings{
         PLUS_PLUS, //plus_plus algo
     }
 
+    public enum MergeType{
+        OR,
+        AND,
+        DISABLED
+    }
+
     public int clustersNum;
 
     public double border;
+    public int minDist;
+    public MergeType mergeType;
+
     public double epsilon;
     public StartPointsAlgo startPoint;
 
@@ -17,10 +26,14 @@ public class CommonSettings{
 
     public CommonSettings(int cnum,
                           double b,
+                          int md,
+                          MergeType mt,
                           double eps,
                           StartPointsAlgo sp){
         clustersNum = cnum;
         border = b;
+        minDist = md;
+        mergeType = mt;
         epsilon = eps;
         startPoint = sp;
     }
@@ -32,6 +45,8 @@ public class CommonSettings{
     public void copy(CommonSettings cs){
         clustersNum = cs.clustersNum;
         border = cs.border;
+        minDist = cs.minDist;
+        mergeType = cs.mergeType;
         epsilon = cs.epsilon;
         startPoint = cs.startPoint;
     }

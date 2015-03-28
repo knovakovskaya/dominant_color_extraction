@@ -1,4 +1,4 @@
-package ru.ifmo.thesis.gui;
+package ru.ifmo.thesis.gui.Util;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;

@@ -5,8 +5,6 @@ import java.util.*;
 
 public class ClusterUtil {
 
-    public static void mergeClusters(int minclusternum,int border){}
-
     private static Cluster[] clustersFromColorCollection(Collection<Map.Entry<Integer, Integer>> colors){
         Cluster[] clusters = new Cluster[colors.size()];
         int id = 0;

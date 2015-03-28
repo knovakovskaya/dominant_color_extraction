@@ -1,4 +1,4 @@
-package ru.ifmo.thesis.gui;
+package ru.ifmo.thesis.gui.Util;
 
 
 import javax.swing.*;

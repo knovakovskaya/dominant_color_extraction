@@ -12,10 +12,12 @@ public class KMeans extends AClusteringAlgorithms{
     }
 
     private KMeansMode mode;
+    protected int distanceType;
 
     public KMeans(String filename, CommonSettings cs, KMeansMode kmMode){
         super(filename, cs);
         mode = kmMode;
+        distanceType = 1;
     }
 
     @Override
@@ -38,7 +40,7 @@ public class KMeans extends AClusteringAlgorithms{
             for (int y = 0; y < h; y++) {
                 for (int x = 0; x < w; x++) {
                     int pixel = origin.getRGB(x, y);
-                    Cluster cluster = findClosestCluster(pixel);
+                    Cluster cluster = findClosestCluster(pixel); //square distance
                     if (lut[w * y + x] != cluster.getId()) {
                         if (mode == KMeansMode.CONTINUOUS) {
                             if (lut[w * y + x] != -1)
@@ -65,6 +67,7 @@ public class KMeans extends AClusteringAlgorithms{
                 }
             }
         }
+        mergeClusters(lut);
         createClusterizedImage(lut);
 
         System.out.println("KMeans algorithm:\n"

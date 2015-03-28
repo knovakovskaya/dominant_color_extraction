@@ -4,6 +4,7 @@ import ru.ifmo.thesis.algo.AClusteringAlgorithms;
 import ru.ifmo.thesis.algo.CommonSettings;
 import ru.ifmo.thesis.algo.KMeans;
 import ru.ifmo.thesis.algo.SimpleLinkage;
+import ru.ifmo.thesis.gui.Util.ImagePanel;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -98,7 +99,12 @@ public class Application extends JFrame {
         final JPanel contentPane = new JPanel();
         contentPane.setLayout(new GridBagLayout());
 
-        settingsPane = new KMeansSettingsPanel(new CommonSettings(10, 0.001, 20, CommonSettings.StartPointsAlgo.PLUS_PLUS));
+        settingsPane = new KMeansSettingsPanel(new CommonSettings(10,
+                                                                  0.001,
+                                                                  0,
+                                                                  CommonSettings.MergeType.DISABLED,
+                                                                  20,
+                                                                  CommonSettings.StartPointsAlgo.PLUS_PLUS));
         settingsPane.calculate.addActionListener(calculateActionListener);
         settingsPane.loadfile.addActionListener(openImageActionListener);
         settingsPane.algoBox.addActionListener(changeAlgoActionListener);

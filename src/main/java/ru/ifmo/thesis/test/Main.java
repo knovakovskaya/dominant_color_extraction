@@ -32,7 +32,12 @@ public class Main {
         }
 
         //calculate
-        CommonSettings cs = new CommonSettings(k, 0.001, 0.05, CommonSettings.StartPointsAlgo.PLUS_PLUS);
+        CommonSettings cs = new CommonSettings(10,
+                                               0.001,
+                                               10,
+                                               CommonSettings.MergeType.OR,
+                                               20,
+                                               CommonSettings.StartPointsAlgo.PLUS_PLUS);
         KMeans kmeans = new KMeans(src, cs, mode);
         BufferedImage dstImage = kmeans.calculate();
         PicUtil.saveImage(dst, dstImage);
