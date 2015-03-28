@@ -1,7 +1,10 @@
 package ru.ifmo.thesis.gui;
 
 import ru.ifmo.thesis.algo.AClusteringAlgorithms;
+import ru.ifmo.thesis.algo.CommonSettings;
 import ru.ifmo.thesis.algo.KMeans;
+import ru.ifmo.thesis.algo.SimpleLinkage;
+import ru.ifmo.thesis.gui.Util.ImagePanel;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -96,10 +99,16 @@ public class Application extends JFrame {
         final JPanel contentPane = new JPanel();
         contentPane.setLayout(new GridBagLayout());
 
-        settingsPane = new SettingsPanel();
+        settingsPane = new KMeansSettingsPanel(new CommonSettings(10,
+                                                                  0.001,
+                                                                  0,
+                                                                  CommonSettings.MergeType.DISABLED,
+                                                                  20,
+                                                                  CommonSettings.StartPointsAlgo.PLUS_PLUS));
         settingsPane.calculate.addActionListener(calculateActionListener);
         settingsPane.loadfile.addActionListener(openImageActionListener);
         settingsPane.algoBox.addActionListener(changeAlgoActionListener);
+        updateAlgo();
 
         JPanel imagesPane = new JPanel();
         imagesPane.setLayout(new BoxLayout(imagesPane, BoxLayout.X_AXIS));
@@ -115,9 +124,9 @@ public class Application extends JFrame {
         colorDistributionPane = new ColorDistributionPanel();
         colorDistributionPane.clearAll();
 
-        contentPane.add(settingsPane, getYPercentGBC(15,0));
         contentPane.add(imagesPane, getYPercentGBC(60,1));
         contentPane.add(colorDistributionPane, getYPercentGBC(25,2));
+        contentPane.add(settingsPane, getYPercentGBC(15,0)); //order matters(look at change settings panel code
         return contentPane;
     }
 
@@ -155,28 +164,58 @@ public class Application extends JFrame {
 
     public ActionListener calculateActionListener = new ActionListener(  ) {
         public void actionPerformed(ActionEvent event) {
+            setCursor (Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             clearStand();
             updateAlgo();
             ArrayList<Map.Entry<Color, Integer>> colors = new ArrayList<>(algo.calculateAndGetColors());
             clustorizedImgPane.setImage(algo.getClustorizedImage());
             colorDistributionPane.colorize(colors, algo.getClustorizedImage().getWidth()*algo.getClustorizedImage().getHeight());
             updateChildren();
+            setCursor (Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         }
     };
 
     public ActionListener changeAlgoActionListener = new ActionListener(  ) {
         public void actionPerformed(ActionEvent event) {
+            JComboBox cb = (JComboBox) event.getSource();
+            String startPoint = (String) cb.getSelectedItem();
+            switch (startPoint) {
+                case "KMeans":
+                    settingsPane = new KMeansSettingsPanel(settingsPane.cs, algo.getOriginalImage() != null);
+                    settingsPane.algoBox.setSelectedIndex(0);
+                    changeSettingsPane(settingsPane);
+                    break;
+                case "SingleLinkage":
+                    settingsPane = new SettingsPanel(settingsPane.cs, algo.getOriginalImage() != null);
+                    settingsPane.algoBox.setSelectedIndex(1);
+                    changeSettingsPane(settingsPane);
+                    break;
+            }
+
             updateAlgo();
             clearStand();
             updateChildren();
         }
     };
 
+    private void changeSettingsPane(SettingsPanel newPane){
+        settingsPane.calculate.addActionListener(calculateActionListener);
+        settingsPane.loadfile.addActionListener(openImageActionListener);
+        settingsPane.algoBox.addActionListener(changeAlgoActionListener);
+        Component toRemove = getContentPane().getComponent(2);
+        GridBagLayout layout = (GridBagLayout)getContentPane().getLayout();
+        GridBagConstraints gbc = layout.getConstraints(getContentPane());
+        remove(toRemove);
+        getContentPane().add(settingsPane, getYPercentGBC(15,0));
+    }
+
     private void updateAlgo(){
         switch ((String)settingsPane.algoBox.getSelectedItem()){
             case "KMeans":
                 algo = new KMeans(filename, settingsPane.cs, KMeans.KMeansMode.CONTINUOUS);
                 break;
+            case "SingleLinkage":
+                algo = new SimpleLinkage(filename, settingsPane.cs);
         }
     }
 

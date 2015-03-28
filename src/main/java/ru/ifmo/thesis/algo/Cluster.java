@@ -8,9 +8,22 @@ class Cluster {
     int greens;
     int blues;
 
+    public Cluster(int id) {
+        this.id = id;
+    }
+
     public Cluster(int id, int rgb) {
         this.id = id;
         addPixel(rgb);
+    }
+
+    public Cluster(int id, int rgb, int size) {
+        this.id = id;
+        addPixel(rgb);
+        pixelCount = size;
+        reds *= pixelCount;
+        greens *= pixelCount;
+        blues *= pixelCount;
     }
 
     public void clear() {
@@ -49,14 +62,33 @@ class Cluster {
         pixelCount--;
     }
 
+    int distance2p(int rgb) {
+        if (pixelCount != 0) {
+            int rx = reds / pixelCount - PicUtil.getRed(rgb);
+            int gx = greens / pixelCount - PicUtil.getGreen(rgb);
+            int bx = blues / pixelCount - PicUtil.getBlue(rgb);
+            return rx*rx + gx*gx + bx*bx;
+        }
+        return Integer.MAX_VALUE;
+    }
+
+    int distance2p(Cluster c){
+        return distance2p(c.getRGB());
+    }
+
     int distance(int rgb) {
-        int d = Integer.MAX_VALUE;
         if (pixelCount != 0) {
             int rx = Math.abs(reds / pixelCount - PicUtil.getRed(rgb));
             int gx = Math.abs(greens / pixelCount - PicUtil.getGreen(rgb));
             int bx = Math.abs(blues / pixelCount - PicUtil.getBlue(rgb));
-            d = (rx + gx + bx) / 3;
+            return rx + gx + bx;
         }
-        return d;
+        return Integer.MAX_VALUE;
     }
+
+    int distance(Cluster c){
+        return distance(c.getRGB());
+    }
+
+
 }

@@ -3,11 +3,7 @@ package ru.ifmo.thesis.algo;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.*;
 import java.util.Map.Entry;
 import javax.imageio.ImageIO;
 
@@ -26,7 +22,21 @@ public abstract class PicUtil {
     }
 
     public static int toRGB(int r, int g, int b){
-        return r | g | b;
+        return (r<<16) | (g<<8) | b;
+    }
+
+    public static int getDistance(int rgb1, int rgb2){
+        double rx = Math.abs(PicUtil.getRed(rgb1) - PicUtil.getRed(rgb2));
+        double gx = Math.abs(PicUtil.getGreen(rgb1) - PicUtil.getGreen(rgb2));
+        double bx = Math.abs(PicUtil.getBlue(rgb1) - PicUtil.getBlue(rgb2));
+        return (int)(rx+gx+bx);
+    }
+
+    public static long getDistance2(int rgb1, int rgb2){
+        double rx = Math.pow(PicUtil.getRed(rgb1) - PicUtil.getRed(rgb2),2);
+        double gx = Math.pow(PicUtil.getGreen(rgb1) - PicUtil.getGreen(rgb2),2);
+        double bx = Math.pow(PicUtil.getBlue(rgb1) - PicUtil.getBlue(rgb2),2);
+        return (long)(rx+gx+bx);
     }
 
     public static void saveImage(String filename, BufferedImage image) {
@@ -81,22 +91,6 @@ public abstract class PicUtil {
         });
         return colorList;
     }
-    /*
-    * colors ordered with distance to 0;0;0
-    */
-    public static Collection<Entry<Integer, Integer>> getOrderedColors(Collection<Entry<Integer, Integer>> colors) {
-        ArrayList<Entry<Integer, Integer>> colorList = new ArrayList<>(colors);
-        Collections.sort(colorList, new Comparator<Entry<Integer, Integer>>() {
-            @Override
-            public int compare(final Entry<Integer, Integer> o1, final Entry<Integer, Integer> o2) {
-                int v1 = getRed(o1.getKey()) + getBlue(o1.getKey()) + getGreen(o1.getKey())/3;
-                int v2 = getRed(o2.getKey()) + getBlue(o2.getKey()) + getGreen(o2.getKey())/3;
-                return -v1 + v2;
-            }
-        });
-        return colorList;
-    }
-
 
     public static Collection<Entry<Color, Integer>> castToColorArray(Collection<Entry<Integer, Integer>> colors){
         HashMap<Color, Integer> awtColors = new HashMap<>();
