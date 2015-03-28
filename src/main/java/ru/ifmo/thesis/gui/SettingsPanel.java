@@ -154,6 +154,7 @@ public class SettingsPanel extends JPanel {
         }
 
         public void createContentPane(){
+            setLayout(new GridBagLayout());
             add(new JLabel("Merge if: cluster is <= than "));
             add(sizeBorder);
             add(new JLabel("of pic"));
