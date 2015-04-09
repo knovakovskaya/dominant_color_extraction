@@ -36,7 +36,7 @@ public class ClusterUtil {
     private static int findClosestClusterInRange(int rgb, Cluster clusters[], int left, int right) {
         int min = Integer.MAX_VALUE;
         for (int i = left; i < right; ++i) {
-            int distance = clusters[i].distance(rgb);
+            int distance = clusters[i].distance2p(rgb);
             if (distance < min) {
                 min = distance;
             }
@@ -59,15 +59,42 @@ public class ClusterUtil {
                     distance[j] = findClosestClusterInRange(colors.get(j).getKey(), startClusters, 0, i);
                     sumDx2 += distance[j];
                 }
-                for (int j = 0; j < distance.length; ++j){
-                    sumDx2 -= distance[j];
-                    if (sumDx2 > 0){
-                        continue;
+                long ppBorder = (long)(new Random(System.currentTimeMillis()).nextDouble()*sumDx2);
+                sumDx2 = 0;
+                for (int j = 0; j < distance.length && sumDx2 < ppBorder; ++j){
+                    sumDx2 += distance[j];
+                    if (sumDx2 >= ppBorder){
+                        startClusters[i] = new Cluster(i, colors.get(j).getKey(), colors.get(j).getValue());
                     }
-                    startClusters[i] = new Cluster(i, colors.get(j).getKey(), colors.get(j).getValue());
                 }
             }
 
+            return  startClusters;
+        }
+        return clustersFromColorCollection(colors);
+    }
+
+    static public Cluster[] getMaxDistClusters(BufferedImage image, CommonSettings cs) {
+        ArrayList<Map.Entry<Integer, Integer>> colors = new ArrayList<Map.Entry<Integer, Integer>>(
+                PicUtil.parseColorsFromPicture(image).entrySet());
+        if (cs.clustersNum < colors.size()){
+            Cluster startClusters[] = new Cluster[cs.clustersNum];
+            int rand = Math.abs(new Random(System.currentTimeMillis()).nextInt()) % colors.size();
+            startClusters[0] = new Cluster(0, colors.get(rand).getKey(), colors.get(rand).getValue());
+            int distance[] = new int[colors.size()];
+
+            for (int i = 1; i < cs.clustersNum; ++i){
+                for (int j = 0; j < distance.length; ++j){
+                    distance[j] = findClosestClusterInRange(colors.get(j).getKey(), startClusters, 0, i);
+                }
+                int maxDistPos = 0;
+                for (int j = 1; j < distance.length; ++j){
+                    if (distance[maxDistPos] > distance[j]){
+                        maxDistPos = j;
+                    }
+                }
+                startClusters[i] = new Cluster(i, colors.get(maxDistPos).getKey(), colors.get(maxDistPos).getValue());
+            }
             return  startClusters;
         }
         return clustersFromColorCollection(colors);
@@ -79,6 +106,8 @@ public class ClusterUtil {
                 return ClusterUtil.getClustersOnDiagonal(bi, cs);
             case PLUS_PLUS:
                 return getPlusPlusClusters(bi, cs);
+            case MAX_DIST:
+                return getMaxDistClusters(bi, cs);
             case RANDOM:
             default:
                 HashMap<Integer,Integer> colors = PicUtil.parseColorsFromPicture(bi);

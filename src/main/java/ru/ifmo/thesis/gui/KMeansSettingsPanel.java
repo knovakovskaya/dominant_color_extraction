@@ -24,6 +24,8 @@ public class KMeansSettingsPanel extends SettingsPanel{
             startPointsBox.setSelectedIndex(1);
         if (pcs.startPoint == CommonSettings.StartPointsAlgo.PLUS_PLUS)
             startPointsBox.setSelectedIndex(2);
+        if (pcs.startPoint == CommonSettings.StartPointsAlgo.MAX_DIST)
+            startPointsBox.setSelectedIndex(3);
     }
 
     @Override
@@ -41,7 +43,7 @@ public class KMeansSettingsPanel extends SettingsPanel{
     @Override
     public void createBasicElements(){
         super.createBasicElements();
-        String[] startPointsList = {"Diagonal", "Random", "PlusPlus"};
+        String[] startPointsList = {"Diagonal", "Random", "PlusPlus", "MaxDist"};
 
         startPointsBox = new JComboBox<>(startPointsList);
         startPointsBox.addActionListener(new ActionListener() {
@@ -58,6 +60,9 @@ public class KMeansSettingsPanel extends SettingsPanel{
                         break;
                     case "PlusPlus":
                         cs.startPoint = CommonSettings.StartPointsAlgo.PLUS_PLUS;
+                        break;
+                    case "MaxDist":
+                        cs.startPoint = CommonSettings.StartPointsAlgo.MAX_DIST;
                         break;
                 }
             }
