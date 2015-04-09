@@ -5,6 +5,7 @@ public class CommonSettings{
         DIAG,  //points from images diagonal
         RANDOM, //random color from picture(random from color collection)
         PLUS_PLUS, //plus_plus algo
+        MAX_DIST, //clusters with max dist between each other
     }
 
     public enum MergeType{
@@ -18,8 +19,6 @@ public class CommonSettings{
     public double border;
     public int minDist;
     public MergeType mergeType;
-
-    public double epsilon;
     public StartPointsAlgo startPoint;
 
     public final static double MAX_CLUSTERS_NUM = 50;
@@ -28,13 +27,11 @@ public class CommonSettings{
                           double b,
                           int md,
                           MergeType mt,
-                          double eps,
                           StartPointsAlgo sp){
         clustersNum = cnum;
         border = b;
         minDist = md;
         mergeType = mt;
-        epsilon = eps;
         startPoint = sp;
     }
 
@@ -47,7 +44,6 @@ public class CommonSettings{
         border = cs.border;
         minDist = cs.minDist;
         mergeType = cs.mergeType;
-        epsilon = cs.epsilon;
         startPoint = cs.startPoint;
     }
 }

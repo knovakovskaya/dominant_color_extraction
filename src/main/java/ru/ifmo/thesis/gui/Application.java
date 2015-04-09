@@ -103,8 +103,7 @@ public class Application extends JFrame {
                                                                   0.001,
                                                                   0,
                                                                   CommonSettings.MergeType.DISABLED,
-                                                                  20,
-                                                                  CommonSettings.StartPointsAlgo.PLUS_PLUS));
+                                                                  CommonSettings.StartPointsAlgo.MAX_DIST));
         settingsPane.calculate.addActionListener(calculateActionListener);
         settingsPane.loadfile.addActionListener(openImageActionListener);
         settingsPane.algoBox.addActionListener(changeAlgoActionListener);
