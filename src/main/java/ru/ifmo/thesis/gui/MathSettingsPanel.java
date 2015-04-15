@@ -45,7 +45,7 @@ public class MathSettingsPanel extends JPanel{
                 calculateDistribution.setEnabled((currentEnabled == maskEnabled) && haveColorDistribution);
             }
         });
-        bconstField = new JTextField("2");
+        bconstField = new JTextField("1");
         bconstField.setColumns(4);
         bconstField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -66,11 +66,11 @@ public class MathSettingsPanel extends JPanel{
                 calculateDistribution.setEnabled((currentEnabled == maskEnabled) && haveColorDistribution);
             }
         });
-        calculateDistribution = new JButton("distribution");
+        calculateDistribution = new JButton("Распределение");
 
-        add(new JLabel("lambda"));
+        add(new JLabel("Лямбда"));
         add(lambdaField);
-        add(new JLabel("B-constant"));
+        add(new JLabel("B-константа"));
         add(bconstField);
         add(calculateDistribution);
     }

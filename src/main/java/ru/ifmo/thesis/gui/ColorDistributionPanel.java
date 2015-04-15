@@ -51,7 +51,7 @@ class ColorDistributionPanel extends JPanel {
                 colorize(colors_list, pixel_num);
             }
         });
-        rightBottomPanel.add(new JLabel("Percentage"));
+        rightBottomPanel.add(new JLabel("Отображать проценты"));
         rightBottomPanel.add(perc);
         mathPane = new MathSettingsPanel();
         mathPane.calculateDistribution.addActionListener(calculateColorDistributionActionListener);

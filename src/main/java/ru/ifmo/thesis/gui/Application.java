@@ -40,58 +40,6 @@ public class Application extends JFrame {
         revalidate();
     }
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //create menu
-
-    private JMenuBar createMenu(){
-        final JMenuBar menuBar = new JMenuBar();
-        JMenu menu;
-        JMenuItem menuItem;
-
-
-        menu = new JMenu("File");
-        menuBar.add(menu);
-
-        menuItem = new JMenuItem("Open Image");
-        menuItem.setMnemonic(KeyEvent.VK_A);
-        menuItem.getAccessibleContext().setAccessibleDescription(
-                "Open new image");
-        //menuItem.addActionListener(openImageActionListener);
-        menuItem.setEnabled(false);
-        menu.add(menuItem);
-
-        menuItem = new JMenuItem("Save Image");
-        menuItem.setMnemonic(KeyEvent.VK_A);
-        menuItem.getAccessibleContext().setAccessibleDescription(
-                "Save clustorized image");
-        menuItem.setEnabled(false);
-        menu.add(menuItem);
-
-        menuItem = new JMenuItem("Save color distribution");
-        menuItem.setMnemonic(KeyEvent.VK_A);
-        menuItem.getAccessibleContext().setAccessibleDescription(
-                "Save color distribution");
-        menuItem.setEnabled(false);
-        menu.add(menuItem);
-
-        menuItem = new JMenuItem("Close image");
-        menuItem.setMnemonic(KeyEvent.VK_A);
-        menuItem.getAccessibleContext().setAccessibleDescription(
-                "Close image and remove all calculated info");
-        menuItem.setEnabled(false);
-        menu.add(menuItem);
-
-        ////////////////////////////////////////////////////////////
-
-        menu = new JMenu("About");
-        menu.setMnemonic(KeyEvent.VK_A);
-        menu.setEnabled(false);
-        menuBar.add(menu);
-
-        return menuBar;
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //create main pane
 
@@ -99,7 +47,7 @@ public class Application extends JFrame {
         final JPanel contentPane = new JPanel();
         contentPane.setLayout(new GridBagLayout());
 
-        settingsPane = new KMeansSettingsPanel(new CommonSettings(10,
+        settingsPane = new KMeansSettingsPanel(new CommonSettings(8,
                                                                   0.001,
                                                                   0,
                                                                   CommonSettings.MergeType.DISABLED,
