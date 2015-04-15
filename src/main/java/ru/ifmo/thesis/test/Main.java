@@ -4,12 +4,15 @@ import ru.ifmo.thesis.algo.KMeans;
 import ru.ifmo.thesis.algo.CommonSettings;
 import ru.ifmo.thesis.algo.PicUtil;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class Main {
 
     public static void main(String[] args) {
-        args = new String[] {"/Users/knovakovskaya/Documents/thesis/pics/sample1.jpg", "/Users/knovakovskaya/clusterized.png", "5", "-c"};
+        args = new String[] {"~/tmp/dominant_color_extraction/pics/sl5.jpg", "~/tmp/dominant_color_extraction/pics/sl5_new.jpg", "3", "-c"};
 
         if (args.length != 4) {
             System.out.println("Usage: java popscan.KMeans"
@@ -32,14 +35,13 @@ public class Main {
         }
 
         //calculate
-        CommonSettings cs = new CommonSettings(10,
-                                               0.001,
-                                               10,
-                                               CommonSettings.MergeType.OR,
-                                               20,
-                                               CommonSettings.StartPointsAlgo.PLUS_PLUS);
+        CommonSettings cs = new CommonSettings(4,
+                                               0.001, //
+                                               10, //
+                                               CommonSettings.MergeType.DISABLED,
+                                               CommonSettings.StartPointsAlgo.MAX_DIST);
         KMeans kmeans = new KMeans(src, cs, mode);
-        BufferedImage dstImage = kmeans.calculate();
-        PicUtil.saveImage(dst, dstImage);
+        ArrayList<Map.Entry<Color, Integer>> colors = new ArrayList<>(kmeans.calculateAndGetColors());
+        PicUtil.saveImage(dst, kmeans.getClustorizedImage());
     }
 }

@@ -89,7 +89,7 @@ public class ClusterUtil {
                 }
                 int maxDistPos = 0;
                 for (int j = 1; j < distance.length; ++j){
-                    if (distance[maxDistPos] > distance[j]){
+                    if (distance[maxDistPos] < distance[j]){
                         maxDistPos = j;
                     }
                 }

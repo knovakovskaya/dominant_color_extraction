@@ -84,14 +84,14 @@ public class SettingsPanel extends JPanel {
     public void createBasicElements(){
         topPane = new JPanel();
 
-        loadfile = new JButton("Open image");
-        calculate = new JButton("Run");
+        loadfile = new JButton("Открыть изображение");
+        calculate = new JButton("Запустить");
         calculate.setEnabled(false);
         algoBox = new JComboBox<>(algoList);
         algoBox.setSelectedIndex(0);
         //action listeners for above added from main frame
 
-        cnumLabel = new JLabel("cluster number: ");
+        cnumLabel = new JLabel("Количество кластеров: ");
         clusterNum = new JValueField(String.valueOf(cs.clustersNum), JValueField.Type.PINT, 2);
         clusterNum.getDocument().addDocumentListener(new SPDocumentListener(){
             @Override
@@ -101,7 +101,7 @@ public class SettingsPanel extends JPanel {
         });
 
 
-        enableMergeCheckbox = new JCheckBox("enable post-merge", cs.mergeType!=CommonSettings.MergeType.DISABLED);
+        enableMergeCheckbox = new JCheckBox("использовать пост-слияние", cs.mergeType!=CommonSettings.MergeType.DISABLED);
         enableMergeCheckbox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -137,7 +137,7 @@ public class SettingsPanel extends JPanel {
 
 
     public boolean readyToStart(){
-        return clusterNum.correctValue() && haveImage &&
+        return clusterNum.correctValue() && (Integer.parseInt(clusterNum.getText()) <= 50) && haveImage &&
                 (!enableMergeCheckbox.isSelected() ||
                         (mergePane.similarityBorder.correctValue() &&
                          mergePane.sizeBorder.correctValue()));
@@ -155,16 +155,16 @@ public class SettingsPanel extends JPanel {
 
         public void createContentPane(){
             setLayout(new GridBagLayout());
-            add(new JLabel("Merge if: cluster is <= than "));
+            add(new JLabel("Слить кластера, если кластер меньше "));
             add(sizeBorder);
-            add(new JLabel("of pic"));
+            add(new JLabel("картинки"));
             add(cond);
-            add(new JLabel(" distance to closest cluster is <= "));
+            add(new JLabel(" расстояние до ближнего кластера <= "));
             add(similarityBorder);
         }
 
         public void createContent(){
-            String[] comboVariance = {"or", "and"};
+            String[] comboVariance = {"или", "и"};
             cond = new JComboBox<>(comboVariance);
             cond.addActionListener(new ActionListener() {
                 @Override
@@ -183,7 +183,7 @@ public class SettingsPanel extends JPanel {
 
         public CommonSettings.MergeType getMergeType(){
             switch ((String) cond.getSelectedItem()) {
-                case "or":
+                case "или":
                     return CommonSettings.MergeType.OR;
                 default:
                     return CommonSettings.MergeType.AND;
